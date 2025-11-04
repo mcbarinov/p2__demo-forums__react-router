@@ -6,6 +6,36 @@ A reference implementation of a React SPA with REST API backend, demonstrating m
 
 This project serves as an architectural template for developers and AI agents building React applications with REST APIs. It showcases production-ready patterns for state management, caching, error handling, and component organization.
 
+## Routes
+
+All available routes in the application:
+
+```
+/login                          Login page (public)
+
+/                               Forum list / Home page (protected)
+/forums/new                     Create new forum (protected)
+/forums/:slug                   Post list for specific forum (protected)
+/forums/:slug/new               Create new post in forum (protected)
+/forums/:slug/:postNumber       View post with comments (protected)
+```
+
+**Examples with real data:**
+
+```
+/login                                  Login page (public)
+
+/                                       Forum list (protected)
+/forums/new                             Create forum form (protected)
+/forums/web-development                 Posts in "web-development" forum (protected)
+/forums/web-development/new             Create post in "web-development" (protected)
+/forums/web-development/42              View post #42 in "web-development" (protected)
+```
+
+**Protection details:**
+- **Public routes**: `/login` - accessible without authentication
+- **Protected routes**: All other routes - wrapped in `Layout` component which acts as auth guard
+
 ## Architecture
 
 ### Project Structure
