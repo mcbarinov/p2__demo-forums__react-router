@@ -5,8 +5,14 @@ import type { Forum, Post, User, LoginRequest, LoginResponse, CreateForumData, C
 import { authStorage } from "@/lib/auth-storage"
 import { navigateTo } from "@/lib/navigation"
 
+const baseUrl = import.meta.env.VITE_API_BASE_URL as string | undefined
+
+if (!baseUrl) {
+  throw new Error("VITE_API_BASE_URL environment variable is required")
+}
+
 const httpClient = ky.create({
-  prefixUrl: "http://localhost:8000",
+  prefixUrl: baseUrl,
   retry: {
     statusCodes: [408, 413, 429, 500, 502, 503, 504],
   },

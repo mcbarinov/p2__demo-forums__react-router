@@ -122,7 +122,7 @@ This file is the heart of all server communication:
 ```typescript
 // Example: Complete API configuration with auth, error handling, and caching
 const httpClient = ky.create({
-  prefixUrl: "http://localhost:8000",  // FastAPI backend URL
+  prefixUrl: baseUrl,  // Configured via VITE_API_BASE_URL environment variable
   hooks: {
     beforeRequest: [(request) => {
       const token = authStorage.getAuthToken()
@@ -466,7 +466,7 @@ export function CreatePostForm() {
 - Python 3.14+ and uv (for backend API)
 - **Backend API**: This project requires the FastAPI backend to be running
   - Repository: https://github.com/mcbarinov/p1__demo-forums__api
-  - The backend must be running on `http://localhost:8000`
+  - By default, the backend should run on `http://localhost:8000` (configurable via `VITE_API_BASE_URL`)
 
 ### Backend Setup
 
@@ -484,6 +484,34 @@ uv run uvicorn api:app --reload
 # Backend will be available at http://localhost:8000
 # API documentation at http://localhost:8000/docs
 ```
+
+### Environment Variables
+
+The project uses environment variables for configuration. Create a `.env` file in the project root:
+
+```bash
+# Copy the example file
+cp .env.example .env
+```
+
+**Available variables:**
+
+- `VITE_API_BASE_URL` - Backend API server endpoint (default: `http://localhost:8000` in development)
+
+**For different environments:**
+
+```bash
+# Development (default)
+VITE_API_BASE_URL=http://localhost:8000
+
+# Staging
+VITE_API_BASE_URL=https://staging-api.example.com
+
+# Production
+VITE_API_BASE_URL=https://api.example.com
+```
+
+**Note**: Environment variables prefixed with `VITE_` are embedded at build time and exposed to the client-side code.
 
 ### Frontend Setup
 
