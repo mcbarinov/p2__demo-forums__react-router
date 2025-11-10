@@ -10,12 +10,24 @@ import { authStorage } from "@/lib/auth-storage"
 export default function Layout() {
   const location = useLocation()
   const hasToken = authStorage.getAuthToken()
-  const { data: currentUser } = useQuery({
+  const { data: currentUser, isPending } = useQuery({
     ...api.queries.currentUser(),
     enabled: !!hasToken,
   })
 
-  if (!hasToken || !currentUser) {
+  if (!hasToken) {
+    return <Navigate to="/login" replace />
+  }
+
+  if (isPending) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">Loading...</div>
+      </div>
+    )
+  }
+
+  if (!currentUser) {
     return <Navigate to="/login" replace />
   }
   return (

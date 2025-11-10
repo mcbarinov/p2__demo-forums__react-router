@@ -1,6 +1,7 @@
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
+import { useNavigate } from "react-router"
 import { api } from "@/lib/api"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -17,6 +18,7 @@ const formSchema = z.object({
 type LoginForm = z.infer<typeof formSchema>
 
 export default function LoginPage() {
+  const navigate = useNavigate()
   const loginMutation = api.mutations.useLogin()
 
   const form = useForm<LoginForm>({ resolver: zodResolver(formSchema), defaultValues: { username: "", password: "" } })
@@ -25,13 +27,7 @@ export default function LoginPage() {
     loginMutation.mutate(data, {
       onSuccess: () => {
         toast.success("Logged in successfully")
-        // We use window.location.href instead of navigate() because:
-        // 1. After login, the auth token is set and queries are invalidated
-        // 2. With client-side navigation, Layout component renders immediately
-        // 3. Layout checks for currentUser which is still loading after invalidation
-        // 4. This causes Layout to redirect back to /login before the query completes
-        // 5. Full page reload ensures queries are prefetched before Layout renders
-        window.location.href = "/"
+        void navigate("/")
       },
     })
   }
